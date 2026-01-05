@@ -2,6 +2,8 @@ import http from "http";
 import ipp from "ipp";
 import { Bonjour } from "bonjour-service";
 import { exec } from "child_process";
+import fs from "fs";
+import path from "path";
 
 export const createServerWhichActsAsAPrinter = ({
   port,
@@ -72,13 +74,15 @@ export const findPrinters = async () => {
       resolve(stdout.trim());
     });
   }).then((response) => {
-    return response
-      .split("\n")
-      .filter((l) => l.includes("usb://"))
-      .map((l) => {
-        const [, name, uri] = l.match(/^device for (.+?): (.+)$/) || [];
-        return { name, uri };
-      });
+    return (
+      response
+        .split("\n")
+        //   .filter((l) => l.includes("usb://"))
+        .map((l) => {
+          const [, name, uri] = l.match(/^urządzenie dla (.+?): (.+)$/) || [];
+          return { name, uri };
+        })
+    );
   });
 };
 
@@ -96,4 +100,15 @@ export const sendResponseAsPrinter = (
       attributes: data,
     })
   );
+};
+
+export const saveJob = (data: any, jobId: number) => {
+  const jobDir = "/jobs";
+  fs.mkdirSync(jobDir, { recursive: true });
+
+  const filePath = path.join(jobDir, `job-${jobId}.bin`);
+
+  fs.writeFileSync(filePath, Buffer.isBuffer(data) ? data : Buffer.from(data));
+
+  return filePath;
 };

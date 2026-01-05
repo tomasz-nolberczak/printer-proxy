@@ -6,6 +6,7 @@ import {
   createServerWhichActsAsAPrinter,
   findPrinters,
   sendResponseAsPrinter,
+  saveJob,
 } from "./lib/utils";
 
 // global objects
@@ -61,6 +62,7 @@ async function main() {
           console.log("Print job data length:", data.data.length);
 
           // todo - print it!
+          saveJob(data.data, 1);
 
           sendResponseAsPrinter(res, data.id, {
             "job-attributes-tag": {
