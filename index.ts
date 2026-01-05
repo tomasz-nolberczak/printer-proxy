@@ -48,9 +48,9 @@ async function main() {
         if (data.operation === "Get-Printer-Attributes") {
           sendResponseAsPrinter(res, data.id, {
             "printer-attributes-tag": {
-              "printer-uri-supported": "ipp://localhost:632/printer",
+              "printer-uri-supported": `ipp://localhost:${config.appPort}/printer`,
               "printer-name": "Node Virtual Printer",
-              "printer-state": 3, // idle
+              "printer-state": 3, // idle job srtate
               "printer-state-reasons": "none",
               "ipp-versions-supported": ["2.0"],
               "uri-authentication-supported": "none",
@@ -67,8 +67,8 @@ async function main() {
           sendResponseAsPrinter(res, data.id, {
             "job-attributes-tag": {
               "job-id": 1,
-              "job-uri": "ipp://localhost:632/job/1",
-              "job-state": 9, // completed
+              "job-uri": `ipp://localhost:${config.appPort}/job/1`, // ofc add real job id
+              "job-state": 9, // completed job state
               "job-state-reasons": "job-completed-successfully",
             },
           });
